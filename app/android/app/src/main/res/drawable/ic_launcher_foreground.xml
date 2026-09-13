@@ -1,0 +1,6 @@
+<!-- Sendy original vector mark -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+<group android:translateX="33" android:translateY="29.64" android:scaleX="0.42" android:scaleY="0.42">
+<path android:fillColor="#F4F1E9" android:pathData="M13 0H48Q51 0 54 3L62 11V28Q62 34 56 34H46C26 34 26 64 46 64C54 64 54 73 46 73H13Q0 73 0 60V13Q0 0 13 0Z"/>
+<group android:translateX="100" android:translateY="116" android:rotation="180"><path android:fillColor="#F4F1E9" android:pathData="M13 0H48Q51 0 54 3L62 11V28Q62 34 56 34H46C26 34 26 64 46 64C54 64 54 73 46 73H13Q0 73 0 60V13Q0 0 13 0Z"/></group>
+</group></vector>

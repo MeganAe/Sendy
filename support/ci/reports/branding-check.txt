@@ -1,0 +1,1 @@
+Sendy 0.1.0: application IDs, active installers, localizations, XML, icons and license checks passed.

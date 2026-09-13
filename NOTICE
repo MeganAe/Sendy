@@ -1,0 +1,13 @@
+Sendy is an independent derivative of LocalSend, licensed under Apache-2.0.
+Original project: https://github.com/localsend/localsend
+Original copyright: Copyright 2022-2026 Tien Do Nam.
+Original contributor and dependency attributions remain in the source and app.
+Sendy is not an official LocalSend release and is not endorsed by its authors.
+
+This fork changes the visual identity, application packaging identifiers,
+installation assets, selected UI components and build workflows. Source code
+files carry modification notices where supported; see SENDY-IMPLEMENTATION.md
+and Git history for the scope of changes, including JSON/localization data and
+binary icon assets. The Sendy mark and generated icons replace the original
+artwork. LocalSend protocol routes and internal package/channel names may be
+retained for technical compatibility and are not claims of brand ownership.

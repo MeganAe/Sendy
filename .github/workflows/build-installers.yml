@@ -1,0 +1,315 @@
+# Sendy independent CI.
+name: Sendy — Build installers
+'on':
+  workflow_dispatch:
+    inputs:
+      windows:
+        description: 'Windows x64 : EXE Inno Setup'
+        type: boolean
+        default: true
+      macos:
+        description: 'macOS Intel et Apple Silicon : DMG + PKG'
+        type: boolean
+        default: true
+      linux:
+        description: 'Linux x64 et ARM64 : DEB + TAR.GZ'
+        type: boolean
+        default: true
+      android:
+        description: 'Android : APK par architecture'
+        type: boolean
+        default: true
+      android_signing:
+        description: 'Android : test temporaire ou clé privée (secrets requis)'
+        type: choice
+        options:
+        - test
+        - release
+        default: test
+permissions:
+  contents: read
+concurrency:
+  group: installers-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    name: Validate Sendy UI
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+    - uses: actions/checkout@v6
+    - uses: subosito/flutter-action@v2
+      with:
+        flutter-version: 3.41.9
+        channel: stable
+        cache: true
+    - name: Check Sendy packaging identity
+      run: |-
+        python3 support/ci/check_branding.py
+        python3 support/ci/test_linux_packaging.py
+    - name: Resolve dependencies
+      working-directory: app
+      run: flutter pub get
+    - name: Analyze application
+      working-directory: app
+      run: flutter analyze --no-fatal-infos --no-fatal-warnings
+    - name: Focused widgets and application compilation tests
+      working-directory: app
+      run: flutter test --concurrency=1 test/widget/sendy
+  windows:
+    runs-on: windows-latest
+    steps:
+    - name: Fix long file paths
+      run: git config --system core.longpaths true
+    - name: Checkout repository
+      uses: actions/checkout@v6
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+        cache: true
+        flutter-version: 3.41.9
+    - name: Version
+      run: |-
+        $version = ((Select-String -Path app/pubspec.yaml -Pattern '^version:').Line -replace 'version: *','').Split('+')[0]
+        "APP_VERSION=$version" >> $env:GITHUB_ENV
+    - name: Install pinned Rust
+      shell: bash
+      run: |-
+        rustup toolchain install --profile minimal
+        rustup show
+    - name: Dependencies
+      working-directory: app
+      run: flutter pub get
+    - name: Compile for Windows
+      working-directory: app
+      run: flutter build windows
+    - name: Include source license
+      run: |
+        Copy-Item LICENSE app/build/windows/x64/runner/Release/data/LICENSE.txt
+        Copy-Item NOTICE app/build/windows/x64/runner/Release/data/NOTICE.txt
+    - name: Prepare Inno Setup payload
+      run: |
+        New-Item -ItemType Directory -Force -Path "${{ runner.temp }}\inno" | Out-Null
+        Copy-Item -Path "app\build\windows\x64\runner\Release\*" -Destination "${{ runner.temp }}\inno" -Recurse
+        Copy-Item -Path "app\assets\packaging\logo.ico" -Destination "${{ runner.temp }}\inno"
+        Copy-Item -Path "support\build\windows\x64\*" -Destination "${{ runner.temp }}\inno" -Recurse
+        New-Item -ItemType Directory -Force -Path "${{ runner.temp }}\inno-result" | Out-Null
+    - name: Locate Inno Setup
+      run: |-
+        $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+        if (!(Test-Path $iscc)) { choco install innosetup --yes --no-progress; if ($LASTEXITCODE -ne 0) { throw 'Inno Setup installation failed' } }
+        if (!(Test-Path $iscc)) { throw 'ISCC not found' }
+        Split-Path $iscc | Out-File -FilePath $env:GITHUB_PATH -Append
+    - name: Compile installer (unsigned)
+      run: |-
+        iscc "/DMyAppVersion=$env:APP_VERSION" "/DPayloadDir=${{ runner.temp }}\inno" "/DResultDir=${{ runner.temp }}\inno-result" support\ci\sendy.iss
+        if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
+    - name: Portable ZIP
+      run: |-
+        Set-Content -Path "${{ runner.temp }}\inno\settings.json" -Value "{}"
+        Compress-Archive -Path "${{ runner.temp }}\inno\*" -DestinationPath "${{ runner.temp }}\inno-result\Sendy-$env:APP_VERSION-windows-x64-portable.zip"
+    - name: Upload installer
+      uses: actions/upload-artifact@v6
+      with:
+        name: sendy-windows-x64
+        path: ${{ runner.temp }}\inno-result\*
+        if-no-files-found: error
+        retention-days: 14
+    if: ${{ inputs.windows }}
+    timeout-minutes: 90
+    needs:
+    - validate
+  linux:
+    if: ${{ inputs.linux }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - runner: ubuntu-22.04
+          arch: x64
+          deb_arch: amd64
+        - runner: ubuntu-22.04-arm
+          arch: arm64
+          deb_arch: arm64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v6
+    - name: System dependencies
+      run: |-
+        sudo apt-get update
+        sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libayatana-appindicator3-dev libsecret-1-dev liblzma-dev libssl-dev
+    - name: Flutter SDK (native x64 or ARM64)
+      run: |-
+        git clone --depth 1 --branch 3.41.9 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+        echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+        "$RUNNER_TEMP/flutter/bin/flutter" --version
+    - name: Install pinned Rust
+      shell: bash
+      run: |-
+        rustup toolchain install --profile minimal
+        rustup show
+    - name: Dependencies
+      working-directory: app
+      run: flutter pub get
+    - name: Build
+      run: flutter build linux --release
+      working-directory: app
+    - name: Package DEB and archive
+      run: bash support/ci/package-linux.sh
+      env:
+        BUILD_ARCH: ${{ matrix.arch }}
+        DEB_ARCH: ${{ matrix.deb_arch }}
+    - uses: actions/upload-artifact@v6
+      with:
+        name: linux-${{ matrix.arch }}
+        path: artifacts/*
+        if-no-files-found: error
+        retention-days: 14
+    needs:
+    - validate
+  macos:
+    if: ${{ inputs.macos }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - runner: macos-15-intel
+          arch: x86_64
+        - runner: macos-15
+          arch: arm64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v6
+    - name: Install Flutter (version du projet)
+      uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+        cache: true
+        flutter-version: 3.41.9
+    - name: Install pinned Rust
+      shell: bash
+      run: |-
+        rustup toolchain install --profile minimal
+        rustup show
+    - name: Rust macOS targets
+      run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+    - name: Configure unsigned native build
+      run: |
+        printf '
+        // Modified by fork CI: unsigned native test build.
+        CODE_SIGNING_ALLOWED = NO
+        CODE_SIGNING_REQUIRED = NO
+        ARCHS = %s
+        ONLY_ACTIVE_ARCH = YES
+        ' "$BUILD_ARCH" >> app/macos/Runner/Configs/AppInfo.xcconfig
+        python3 - <<'PYMAC'
+        from pathlib import Path
+        import re
+        p = Path('app/macos/Runner.xcodeproj/project.pbxproj')
+        s = p.read_text()
+        s = re.sub(r'CODE_SIGN_STYLE = (Automatic|Manual);', 'CODE_SIGN_STYLE = Manual; CODE_SIGNING_ALLOWED = NO; CODE_SIGNING_REQUIRED = NO;', s)
+        s = re.sub(r'DEVELOPMENT_TEAM = [^;]+;', 'DEVELOPMENT_TEAM = "";', s)
+        p.write_text('// Modified by fork CI: disable team signing for test builds.\n' + s)
+        PYMAC
+      env:
+        BUILD_ARCH: ${{ matrix.arch }}
+    - name: Dependencies
+      working-directory: app
+      run: flutter pub get
+    - name: Build macOS
+      run: flutter build macos --release
+      working-directory: app
+    - name: Package DMG and PKG
+      run: bash support/ci/package-macos.sh
+      env:
+        BUILD_ARCH: ${{ matrix.arch }}
+    - uses: actions/upload-artifact@v6
+      with:
+        name: macos-${{ matrix.arch }}
+        path: artifacts/*
+        if-no-files-found: error
+        retention-days: 14
+    needs:
+    - validate
+  android:
+    if: ${{ inputs.android }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    steps:
+    - uses: actions/checkout@v6
+    - uses: actions/setup-java@v5
+      with:
+        distribution: temurin
+        java-version: '17'
+    - name: Install Flutter (version du projet)
+      uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+        cache: true
+        flutter-version: 3.41.9
+    - name: Install pinned Rust
+      shell: bash
+      run: |-
+        rustup toolchain install --profile minimal
+        rustup show
+    - name: Configure APK signing
+      run: python3 support/ci/android-signing.py
+      env:
+        SIGNING_MODE: ${{ inputs.android_signing }}
+        KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+    - name: Dependencies
+      working-directory: app
+      run: flutter pub get
+    - name: Build APKs
+      run: flutter build apk --release --split-per-abi
+      working-directory: app
+      env:
+        SENDY_TEST_BUILD: ${{ inputs.android_signing == 'test' && '1' || '0' }}
+    - name: Collect APKs
+      run: |-
+        mkdir -p artifacts
+        version=$(sed -n 's/^version: \([^+]*\).*/\1/p' app/pubspec.yaml)
+        for f in app/build/app/outputs/flutter-apk/*-release.apk; do
+          cp "$f" "artifacts/Sendy-${version}-${SIGNING_MODE}-$(basename "$f")"
+        done
+        cp LICENSE artifacts/LICENSE.txt
+        cp NOTICE artifacts/NOTICE.txt
+      env:
+        SIGNING_MODE: ${{ inputs.android_signing }}
+    - uses: actions/upload-artifact@v6
+      with:
+        name: android-${{ inputs.android_signing }}
+        path: artifacts/*
+        if-no-files-found: error
+        retention-days: 14
+    - name: Remove signing material
+      run: rm -f app/android/key.properties "$RUNNER_TEMP/app-signing.jks"
+      if: ${{ always() }}
+    needs:
+    - validate
+  checksums:
+    needs:
+    - windows
+    - linux
+    - macos
+    - android
+    if: ${{ always() && contains(needs.*.result, 'success') }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+    - uses: actions/download-artifact@v7
+      with:
+        path: downloads
+    - name: SHA256 manifest
+      run: find downloads -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
+    - uses: actions/upload-artifact@v6
+      with:
+        name: checksums
+        path: SHA256SUMS.txt
+        if-no-files-found: error
+        retention-days: 14

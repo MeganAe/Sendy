@@ -1,0 +1,39 @@
+# Sendy independent CI.
+name: Sendy — Source checks
+permissions:
+  contents: read
+concurrency:
+  group: sendy-checks-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  checks:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+    - uses: actions/checkout@v6
+    - uses: subosito/flutter-action@v2
+      with:
+        flutter-version: 3.41.9
+        channel: stable
+        cache: true
+    - name: Check packaging identity
+      run: |-
+        python3 support/ci/check_branding.py
+        python3 support/ci/test_linux_packaging.py
+    - name: Dependencies
+      working-directory: app
+      run: flutter pub get
+    - name: Analyze Dart application
+      working-directory: app
+      run: flutter analyze --no-fatal-infos --no-fatal-warnings
+    - name: Sendy tests
+      working-directory: app
+      run: flutter test --concurrency=1 test/widget/sendy
+'on':
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+  workflow_dispatch: null
