@@ -5,7 +5,13 @@ version=$(sed -n 's/^version: \([^+]*\).*/\1/p' app/pubspec.yaml)
 app=$(find app/build/macos/Build/Products/Release -maxdepth 1 -name '*.app' -type d -print -quit)
 test -n "$app"
 executable=$(/usr/libexec/PlistBuddy -c "Print CFBundleExecutable" "$app/Contents/Info.plist")
-lipo -verify_arch "$BUILD_ARCH" "$app/Contents/MacOS/$executable"
+# lipo consumes all arguments following -verify_arch as architecture names.
+# Keep the input executable BEFORE that option.
+case "${BUILD_ARCH:-}" in
+  x86_64|arm64) ;;
+  *) echo "Unsupported or missing BUILD_ARCH: ${BUILD_ARCH:-unset}" >&2; exit 1 ;;
+esac
+lipo "$app/Contents/MacOS/$executable" -verify_arch "$BUILD_ARCH"
 # For this unsigned fork, remove the team-dependent app group entitlement.
 # Keep network and file-access sandbox entitlements for local transfers.
 python3 - "$RUNNER_TEMP/entitlements.plist" <<'PY'
