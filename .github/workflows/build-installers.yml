@@ -180,8 +180,29 @@ jobs:
           arch: arm64
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 90
+    # connectivity_plus references an API from macOS SDK 26+.
+    # Runtime #available checks cannot make this compile with an older SDK.
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
     steps:
     - uses: actions/checkout@v6
+    - name: Verify Xcode and macOS SDK
+      shell: bash
+      run: |
+        set -euo pipefail
+        if [[ ! -d "$DEVELOPER_DIR" ]]; then
+          echo "::error::Pinned Xcode 26.3 is missing from this runner image."
+          ls -d /Applications/Xcode*.app || true
+          exit 1
+        fi
+        xcodebuild -version
+        xcrun swift --version
+        sdk_version=$(xcrun --sdk macosx --show-sdk-version)
+        echo "macOS SDK: $sdk_version"
+        if [[ "${sdk_version%%.*}" -lt 26 ]]; then
+          echo "::error::connectivity_plus requires macOS SDK 26 or newer to compile."
+          exit 1
+        fi
     - name: Install Flutter (version du projet)
       uses: subosito/flutter-action@v2
       with:
