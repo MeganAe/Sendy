@@ -25,7 +25,7 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final french = Localizations.localeOf(context).languageCode == 'fr';
     return Scaffold(
-      appBar: AppBar(title: Text(t.aboutPage.title)),
+      appBar: AppBar(title: Text(SendyIdentity.aboutTitle(t.aboutPage.title))),
       body: ResponsiveListView(
         padding: const EdgeInsets.all(24),
         children: [
@@ -33,7 +33,7 @@ class AboutPage extends StatelessWidget {
           const LocalSendLogo(withText: true),
           const SizedBox(height: 24),
           Text(
-            french ? 'Développé par ${SendyIdentity.developer}' : 'Developed by ${SendyIdentity.developer}',
+            SendyIdentity.developerLabel(french: french),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleLarge,
           ),
@@ -69,7 +69,7 @@ class _UpstreamCreditsPage extends StatelessWidget {
     final primaryColor = Theme.of(context).colorScheme.primary;
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.aboutPage.title),
+        title: Text(Localizations.localeOf(context).languageCode == 'fr' ? 'Licences et crédits des composants' : 'Component licenses and credits'),
       ),
       body: ResponsiveListView(
         padding: const EdgeInsets.symmetric(horizontal: 15),

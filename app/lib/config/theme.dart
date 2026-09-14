@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:localsend_app/config/sendy/sendy_brand.dart';
+import 'package:localsend_app/config/sendy/sendy_system_bars.dart';
 import 'package:localsend_app/gen/strings.g.dart';
 import 'package:localsend_app/model/persistence/color_mode.dart';
 import 'package:localsend_app/provider/device_info_provider.dart';
@@ -68,6 +69,7 @@ ThemeData getTheme(ColorMode colorMode, Color customColor, Brightness brightness
       clipBehavior: Clip.antiAlias,
     ),
     appBarTheme: AppBarTheme(
+      systemOverlayStyle: SendySystemBars.statusBarFor(colorScheme.surface),
       backgroundColor: colorScheme.surface,
       foregroundColor: colorScheme.onSurface,
       elevation: 0,
@@ -219,6 +221,11 @@ ThemeData _getYaruTheme(Brightness brightness) {
   InputDecorationThemeData;
 
   return baseTheme.copyWith(
+    // Do not inherit a fixed overlay brightness from the desktop-oriented Yaru theme.
+    appBarTheme: baseTheme.appBarTheme.copyWith(
+      backgroundColor: colorScheme.surface,
+      systemOverlayStyle: SendySystemBars.statusBarFor(colorScheme.surface),
+    ),
     // same density on all platforms so desktop matches mobile (defaults to compact on desktop)
     visualDensity: VisualDensity.standard,
     navigationBarTheme: colorScheme.brightness == Brightness.dark

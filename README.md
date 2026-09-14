@@ -1,3 +1,9 @@
+> **État actuel :** les libellés À propos/paramètres sont corrigés. **Les cinq fonctions ne sont pas toutes terminées.** Consulter [le tableau d’avancement exact](support/features/ETAT-LIVRAISON.fr.md). 46 tests ciblés passent ; validation complète sur GitHub et appareils encore nécessaire.
+
+> **BRANCHE DE DÉVELOPPEMENT — fonctionnalités en cours.** Ce lot ajoute une première bibliothèque de colis et la confirmation de réception par défaut. Les cinq fonctionnalités demandées ne sont pas encore terminées. Ne pas distribuer comme une version stable. Voir [le périmètre et l’état réel](support/features/SENDY-0.2-PLAN.fr.md).
+
+> **Mise à jour macOS :** les journaux ont identifié un SDK Xcode trop ancien. Le workflow sélectionne maintenant Xcode 26.3. [Diagnostic et correction](support/ci/MACOS-SDK-FIX.fr.md). Les mentions « cause inconnue » ci-dessous décrivent l’état précédent ; la nouvelle compilation reste à confirmer sur GitHub.
+
 # Sendy
 
 **Partage de fichiers entre appareils — développé par Metoushela Walker.**

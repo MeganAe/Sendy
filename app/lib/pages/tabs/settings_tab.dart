@@ -531,7 +531,7 @@ class SettingsTab extends StatelessWidget {
                   },
                 ),
                 _ButtonEntry(
-                  label: t.aboutPage.title,
+                  label: SendyIdentity.aboutTitle(t.aboutPage.title),
                   buttonLabel: t.general.open,
                   onTap: () async {
                     await context.push(() => const AboutPage());
@@ -578,7 +578,7 @@ class SettingsTab extends StatelessWidget {
                   orElse: () => Container(),
                 ),
             Text(
-              '© ${DateTime.now().year} Tien Do Nam',
+              SendyIdentity.developerLabel(french: Localizations.localeOf(context).languageCode == 'fr'),
               textAlign: TextAlign.center,
             ),
             Center(

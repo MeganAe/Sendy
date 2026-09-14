@@ -1,0 +1,54 @@
+00:00 +0: loading /home/user/localsend/app/test/widget/sendy/sendy_about_branding_test.dart
+00:00 +0: /home/user/localsend/app/test/widget/sendy/sendy_about_branding_test.dart: French About heading names Sendy
+00:00 +1: /home/user/localsend/app/test/widget/sendy/sendy_about_branding_test.dart: Brand substitution preserves the rest of the localized heading
+00:00 +2: /home/user/localsend/app/test/widget/sendy/sendy_about_branding_test.dart: The Sendy developer label is consistent between pages
+00:00 +3: loading /home/user/localsend/app/test/widget/sendy/sendy_system_bars_test.dart
+00:03 +3: /home/user/localsend/app/test/widget/sendy/sendy_system_bars_test.dart: Dark backgrounds have light Android status icons
+00:03 +4: /home/user/localsend/app/test/widget/sendy/sendy_system_bars_test.dart: Light backgrounds have dark Android status icons
+00:03 +5: /home/user/localsend/app/test/widget/sendy/sendy_system_bars_test.dart: Use the higher contrast for custom surfaces
+00:03 +6: /home/user/localsend/app/test/widget/sendy/sendy_system_bars_test.dart: App theme changes rebuild the status style without restarting
+00:04 +7: /home/user/localsend/app/test/widget/sendy/sendy_system_bars_test.dart: AppBar uses an explicit overlay rather than a conflicting default
+00:04 +8: loading /home/user/localsend/app/test/widget/sendy/sendy_parcel_test.dart
+00:04 +8: /home/user/localsend/app/test/widget/sendy/sendy_parcel_test.dart: Reference-only library round trips without embedding contents
+00:05 +9: /home/user/localsend/app/test/widget/sendy/sendy_parcel_test.dart: Only absent storage means a new empty library
+00:05 +10: /home/user/localsend/app/test/widget/sendy/sendy_parcel_test.dart: Newer schemas are never treated as an empty library
+00:05 +11: /home/user/localsend/app/test/widget/sendy/sendy_parcel_test.dart: Duplicate identifiers are rejected
+00:05 +12: /home/user/localsend/app/test/widget/sendy/sendy_parcel_test.dart: Entries cannot be changed after creating a parcel
+00:05 +13: /home/user/localsend/app/test/widget/sendy/sendy_parcel_test.dart: Empty parcels and blank titles are rejected
+00:05 +14: /home/user/localsend/app/test/widget/sendy/sendy_parcel_test.dart: Invalid saved references and negative sizes are rejected
+00:05 +15: loading /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart
+00:05 +15: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Windows settings belong exclusively to Sendy
+00:05 +16: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: An invalid APPDATA cannot silently select a relative directory
+00:05 +17: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Portable data cannot collide with the upstream settings.json
+00:05 +18: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: HTTP is separate, but discovery remains on the common multicast port
+00:05 +19: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Yaru becomes the default without replacing an explicitly custom theme
+00:05 +20: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Diagnostic report contains only the declared non-private fields
+00:05 +21: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Sendy file store Writes never change a neighbouring LocalSend directory
+00:05 +22: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Sendy file store A previous valid version is backed up; no temporary file remains
+00:05 +23: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Sendy file store Malformed preferences are preserved, not silently overwritten
+00:05 +24: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Sendy file store Removing and clearing settings updates memory and disk together
+00:05 +25: loading /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart
+00:07 +25: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Palette dark: readable text and primary buttons
+00:07 +26: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Palette light: readable text and primary buttons
+00:07 +27: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: The logo exposes one accessible brand label
+00:08 +28: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Picker header: width 320.0, text scale 1.0
+00:08 +29: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Picker header: width 320.0, text scale 2.0
+00:08 +30: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Picker header: width 390.0, text scale 1.0
+00:08 +31: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Picker header: width 390.0, text scale 2.0
+00:08 +32: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Picker header: width 1100.0, text scale 1.0
+00:08 +33: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Picker header: width 1100.0, text scale 2.0
+00:08 +34: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: A populated selection does not repeat the empty-state button
+00:08 +35: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Dark mode renders without layout exceptions
+00:08 +36: loading /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart
+00:09 +36: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Only a completely finished session is successful
+00:09 +37: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Waiting and transferring are distinct
+00:09 +38: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Display real progress, not a simulated percentage
+00:10 +39: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Unknown progress does not claim a percentage
+00:10 +40: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Failure at full byte count must not look successful
+00:10 +41: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Success animation finishes and does not repeat
+00:10 +42: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Reduced motion is honored immediately and after a change
+00:10 +43: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Transfer panel supports narrow screens and large text
+00:10 +44: loading /home/user/localsend/app/test/unit/util/shared_preferences/shared_preferences_portable_test.dart
+00:11 +44: /home/user/localsend/app/test/unit/util/shared_preferences/shared_preferences_portable_test.dart: should put sendy-settings.json next to the executable
+00:11 +45: /home/user/localsend/app/test/unit/util/shared_preferences/shared_preferences_portable_test.dart: should fall back to the working directory when the executable is unknown
+00:11 +46: All tests passed!

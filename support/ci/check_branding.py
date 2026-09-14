@@ -48,6 +48,10 @@ check("'sendy-settings.json'" in text('app/lib/util/shared_preferences/shared_pr
 check('port: localsend::multicast::DEFAULT_PORT,' in text('packages/localsend_isolates/rust/src/api/discovery.rs'), 'Discovery and HTTP must not share a configurable port')
 check('AppPublisher=Metoushela Walker' in text('support/ci/sendy.iss'), 'Publisher must be Metoushela Walker')
 check("defaultColorMode = 'yaru'" in text('app/lib/config/sendy/sendy_identity.dart'), 'Yaru must be the default')
+check('SendyIdentity.aboutTitle(t.aboutPage.title)' in text('app/lib/pages/about/about_page.dart'), 'Sendy About heading must use its own brand')
+check('label: SendyIdentity.aboutTitle(t.aboutPage.title)' in text('app/lib/pages/tabs/settings_tab.dart'), 'Settings must link to About Sendy')
+check('Tien Do Nam' not in text('app/lib/pages/tabs/settings_tab.dart'), 'Upstream author belongs in the credits page, not the Sendy settings footer')
+check('Tien Do Nam' in text('app/lib/pages/about/about_page.dart'), 'Preserve original author attribution on the credits page')
 if errors:
     raise SystemExit('\n'.join(errors))
 print(f'Sendy {version}: application IDs, active installers, localizations, XML, icons and license checks passed.')

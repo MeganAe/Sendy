@@ -166,6 +166,13 @@ class PersistenceService {
       }
     }
 
+    // Sendy feature policy: explicit approval is the default, including for favorites.
+    // Apply once on upgrade; a user may subsequently opt into automatic reception.
+    if (prefs.getBool('sendy_manual_receipt_v1') != true) {
+      await prefs.setString(_quickSave, QuickSaveMode.off.name);
+      await prefs.setBool('sendy_manual_receipt_v1', true);
+    }
+
     // Adopt the requested default once, without replacing a chosen custom/system/OLED theme.
     if (prefs.getBool('sendy_isolation_002') != true) {
       if (SendyIdentity.adoptYaru(prefs.getString(_colorKey))) {
@@ -455,7 +462,7 @@ class PersistenceService {
 
   QuickSaveMode getQuickSave() {
     final value = _prefs.getString(_quickSave);
-    return QuickSaveMode.values.firstWhereOrNull((mode) => mode.name == value) ?? QuickSaveMode.paired;
+    return QuickSaveMode.values.firstWhereOrNull((mode) => mode.name == value) ?? QuickSaveMode.off;
   }
 
   Future<void> setQuickSave(QuickSaveMode mode) async {

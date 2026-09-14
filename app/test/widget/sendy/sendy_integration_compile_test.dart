@@ -10,6 +10,14 @@ import 'package:localsend_app/pages/home_page.dart';
 import 'package:yaru/yaru.dart' as yaru;
 
 void main() {
+  test('Actual Sendy and Yaru AppBars declare readable system icons', () {
+    for (final mode in [ColorMode.yaru, ColorMode.localsend]) {
+      for (final brightness in Brightness.values) {
+        final theme = getTheme(mode, Colors.red, brightness, null);
+        expect(theme.appBarTheme.systemOverlayStyle?.statusBarIconBrightness, brightness == Brightness.dark ? Brightness.light : Brightness.dark);
+      }
+    }
+  });
   test('Requested default theme is Yaru in light and dark modes', () {
     expect(SendyIdentity.defaultColorMode, ColorMode.yaru.name);
     expect(getTheme(ColorMode.yaru, Colors.red, Brightness.light, null).colorScheme, yaru.yaruLight.colorScheme);

@@ -1,3 +1,5 @@
+> **Mise à jour macOS :** les journaux ont identifié un SDK Xcode trop ancien. Le workflow sélectionne maintenant Xcode 26.3. [Diagnostic et correction](MACOS-SDK-FIX.fr.md). Les mentions « cause inconnue » ci-dessous décrivent l’état précédent ; la nouvelle compilation reste à confirmer sur GitHub.
+
 # Sendy 0.1.1 — isolation, auteur, Yaru et diagnostics
 
 ## Défaut confirmé dans la version 0.1.0

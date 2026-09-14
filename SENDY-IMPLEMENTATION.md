@@ -1,3 +1,5 @@
+> **Mise à jour macOS :** les journaux ont identifié un SDK Xcode trop ancien. Le workflow sélectionne maintenant Xcode 26.3. [Diagnostic et correction](support/ci/MACOS-SDK-FIX.fr.md). Les mentions « cause inconnue » ci-dessous décrivent l’état précédent ; la nouvelle compilation reste à confirmer sur GitHub.
+
 # Mise à jour 0.1.1 — état actuel
 
 Le bilan 0.1.0 ci-dessous est conservé comme historique. **Son affirmation d’isolation des réglages Windows était incomplète et incorrecte** : le chemin `%APPDATA%\LocalSend` et la migration héritée restaient actifs. Le défaut a été confirmé puis corrigé en 0.1.1.

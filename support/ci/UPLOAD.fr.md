@@ -1,3 +1,5 @@
+> **Mise à jour macOS :** les journaux ont identifié un SDK Xcode trop ancien. Le workflow sélectionne maintenant Xcode 26.3. [Diagnostic et correction](MACOS-SDK-FIX.fr.md). Les mentions « cause inconnue » ci-dessous décrivent l’état précédent ; la nouvelle compilation reste à confirmer sur GitHub.
+
 # Mettre à jour le dépôt existant MeganAe/Sendy
 
 L’archive `Sendy-0.1.1-source.zip` contient les **sources**, pas un installateur déjà compilé. Aucune compilation locale n’est nécessaire. Elle inclut le dossier caché `.github` et les ressources de `support/build`, sans SDK, clé privée ou historique Git.

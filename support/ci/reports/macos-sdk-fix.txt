@@ -1,0 +1,6 @@
+actionlint: no errors.
+YAML parsed successfully.
+Non-macOS jobs unchanged against delivered 0.1.1.
+Architecture matrix unchanged.
+Xcode 26.3 selected and checked in the macOS job only.
+Native build NOT executed locally; GitHub validation pending.

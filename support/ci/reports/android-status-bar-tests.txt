@@ -1,0 +1,7 @@
+00:00 +0: loading /home/user/localsend/app/test/widget/sendy/sendy_system_bars_test.dart
+00:00 +0: Dark backgrounds have light Android status icons
+00:00 +1: Light backgrounds have dark Android status icons
+00:00 +2: Use the higher contrast for custom surfaces
+00:00 +3: App theme changes rebuild the status style without restarting
+00:00 +4: AppBar uses an explicit overlay rather than a conflicting default
+00:00 +5: All tests passed!

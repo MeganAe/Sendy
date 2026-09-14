@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:localsend_app/config/init.dart';
 import 'package:localsend_app/config/init_error.dart';
+import 'package:localsend_app/config/sendy/sendy_system_bars.dart';
 import 'package:localsend_app/config/theme.dart';
 import 'package:localsend_app/gen/strings.g.dart';
 import 'package:localsend_app/model/persistence/color_mode.dart';
@@ -82,6 +83,7 @@ class LocalSendApp extends StatelessWidget {
           child: ShortcutWatcher(
             child: MaterialApp(
               title: 'Sendy',
+              builder: (context, child) => SendyStatusBar(child: child ?? const SizedBox.shrink()),
               locale: TranslationProvider.of(context).flutterLocale,
               supportedLocales: AppLocaleUtils.supportedLocales,
               localizationsDelegates: GlobalMaterialLocalizations.delegates,

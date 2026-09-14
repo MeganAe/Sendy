@@ -10,6 +10,12 @@ abstract final class SendyIdentity {
   static const defaultColorMode = 'yaru';
   static const repository = 'https://github.com/MeganAe/Sendy';
 
+  // Preserve the user's language while branding our own About entry.
+  // Original attribution text on the dedicated credits page is not rewritten.
+  static String aboutTitle(String translatedTitle) => translatedTitle.replaceAll(RegExp(r'Local\s?Send', caseSensitive: false), 'Sendy');
+
+  static String developerLabel({required bool french}) => french ? 'Développé par $developer' : 'Developed by $developer';
+
   static String windowsSettingsPath(String roamingAppData) {
     if (roamingAppData.trim().isEmpty || !path.windows.isAbsolute(roamingAppData)) {
       throw ArgumentError('An absolute APPDATA path is required for Sendy settings.');

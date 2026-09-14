@@ -116,6 +116,25 @@ class AddBinaryAction extends ReduxAction<SelectedSendingFilesNotifier, List<Cro
   }
 }
 
+/// Sendy: atomically merge checked parcel references and refresh stale file metadata.
+/// Other selected files remain selected; no cache cleanup or transfer is started.
+class LoadParcelSelectionAction extends ReduxAction<SelectedSendingFilesNotifier, List<CrossFile>> {
+  final List<CrossFile> files;
+
+  LoadParcelSelectionAction(this.files);
+
+  @override
+  List<CrossFile> reduce() {
+    final replacements = {for (final file in files) file.path!: file};
+    final result = <CrossFile>[];
+    for (final current in state) {
+      result.add(replacements.remove(current.path) ?? current);
+    }
+    result.addAll(replacements.values);
+    return List.unmodifiable(result);
+  }
+}
+
 /// Adds one or more files to the list.
 class AddFilesAction<T> extends AsyncReduxAction<SelectedSendingFilesNotifier, List<CrossFile>> {
   final Iterable<T> files;
