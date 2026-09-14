@@ -109,7 +109,7 @@ jobs:
         Set-Content -Path "${{ runner.temp }}\inno\sendy-settings.json" -Value "{}"
         Compress-Archive -Path "${{ runner.temp }}\inno\*" -DestinationPath "${{ runner.temp }}\inno-result\Sendy-$env:APP_VERSION-windows-x64-portable.zip"
     - name: Upload installer
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: sendy-windows-x64
         path: ${{ runner.temp }}\inno-result\*
@@ -160,7 +160,7 @@ jobs:
       env:
         BUILD_ARCH: ${{ matrix.arch }}
         DEB_ARCH: ${{ matrix.deb_arch }}
-    - uses: actions/upload-artifact@v6
+    - uses: actions/upload-artifact@v7
       with:
         name: linux-${{ matrix.arch }}
         path: artifacts/*
@@ -225,7 +225,7 @@ jobs:
       working-directory: app
     - name: Upload macOS build log
       if: ${{ always() }}
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: sendy-macos-build-log-${{ matrix.arch }}
         path: ${{ runner.temp }}/sendy-macos-build.log
@@ -235,7 +235,7 @@ jobs:
       run: bash support/ci/package-macos.sh
       env:
         BUILD_ARCH: ${{ matrix.arch }}
-    - uses: actions/upload-artifact@v6
+    - uses: actions/upload-artifact@v7
       with:
         name: macos-${{ matrix.arch }}
         path: artifacts/*
@@ -291,7 +291,7 @@ jobs:
         cp NOTICE artifacts/NOTICE.txt
       env:
         SIGNING_MODE: ${{ inputs.android_signing }}
-    - uses: actions/upload-artifact@v6
+    - uses: actions/upload-artifact@v7
       with:
         name: android-${{ inputs.android_signing }}
         path: artifacts/*
@@ -317,7 +317,7 @@ jobs:
         path: downloads
     - name: SHA256 manifest
       run: find downloads -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
-    - uses: actions/upload-artifact@v6
+    - uses: actions/upload-artifact@v7
       with:
         name: checksums
         path: SHA256SUMS.txt
