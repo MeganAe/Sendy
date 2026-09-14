@@ -1,11 +1,11 @@
 # Modified for Sendy: explicit Flutter SDK test dependency for the new widget tests.
 name: localsend_app
 description: Sendy - local file sharing, based on LocalSend
-homepage: https://github.com/localsend/localsend # Upstream source; Sendy repository URL not configured yet.
+homepage: https://github.com/MeganAe/Sendy
 publish_to: "none"
 resolution: workspace
 
-version: 0.1.0+1
+version: 0.1.1+2
 
 environment:
   flutter: ^3.41.0

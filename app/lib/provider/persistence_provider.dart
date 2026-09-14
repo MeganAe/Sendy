@@ -1,10 +1,11 @@
-// Modified for Sendy: new installations default to the brand palette; existing preferences are retained.
+// Modified for Sendy 0.1.1: isolated Windows store, no upstream import, Yaru default and dedicated HTTP port.
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:localsend_app/config/sendy/sendy_identity.dart';
 import 'package:localsend_app/gen/strings.g.dart';
 import 'package:localsend_app/model/persistence/color_mode.dart';
 import 'package:localsend_app/model/persistence/favorite_device.dart';
@@ -14,7 +15,6 @@ import 'package:localsend_app/model/send_mode.dart';
 import 'package:localsend_app/provider/window_dimensions_provider.dart';
 import 'package:localsend_app/util/alias_generator.dart';
 import 'package:localsend_app/util/native/autostart_helper.dart';
-import 'package:localsend_app/util/native/context_menu_helper.dart';
 import 'package:localsend_app/util/native/platform_check.dart';
 import 'package:localsend_app/util/security_helper.dart';
 import 'package:localsend_app/util/shared_preferences/shared_preferences_file.dart';
@@ -35,12 +35,8 @@ final _logger = Logger('PersistenceService');
 
 String get _windowsFile {
   final appData = Platform.environment['APPDATA'];
-  return '$appData\\LocalSend\\settings.json';
-}
-
-String get _windowsLegacyFile {
-  final appData = Platform.environment['APPDATA'];
-  return '$appData\\org.localsend\\localsend_app\\shared_preferences.json';
+  if (appData == null) throw StateError('APPDATA is unavailable. Sendy cannot safely select its settings directory.');
+  return SendyIdentity.windowsSettingsPath(appData);
 }
 
 // Version of the storage
@@ -114,25 +110,18 @@ class PersistenceService {
     SharedPreferences prefs;
 
     final portableStore = SharedPreferencesPortable();
-    bool usingLegacyStore = false;
     if (checkPlatform(const [TargetPlatform.windows, TargetPlatform.linux, TargetPlatform.macOS]) && portableStore.exists()) {
       _logger.info('Using portable settings.');
       SharedPreferencesStorePlatform.instance = portableStore;
     } else if (defaultTargetPlatform == TargetPlatform.windows) {
-      final legacyStore = SharedPreferencesFile(filePath: _windowsLegacyFile);
-      if (legacyStore.exists()) {
-        _logger.info('Using legacy settings. Will migrate in the next step.');
-        SharedPreferencesStorePlatform.instance = legacyStore;
-        usingLegacyStore = true;
-      } else {
-        SharedPreferencesStorePlatform.instance = SharedPreferencesFile(filePath: _windowsFile);
-      }
+      // Do not inspect, migrate, rename or delete any other application's data.
+      SharedPreferencesStorePlatform.instance = SharedPreferencesFile(filePath: _windowsFile);
     }
 
     final bool isFirstAppStart;
     final existingVersion = (await SharedPreferencesStorePlatform.instance.getAll())['flutter.$_version'] as int?;
     _logger.info('Existing version: $existingVersion');
-    if (existingVersion == null && !usingLegacyStore) {
+    if (existingVersion == null) {
       isFirstAppStart = true;
       await SharedPreferencesStorePlatform.instance.setValue('Int', 'flutter.$_version', _latestVersion);
     } else {
@@ -146,13 +135,7 @@ class PersistenceService {
     try {
       prefs = await SharedPreferences.getInstance();
     } catch (e) {
-      if (checkPlatform([TargetPlatform.windows])) {
-        _logger.info('Could not initialize SharedPreferences, trying to delete corrupted settings file', e);
-        File(_windowsFile).deleteSync();
-        prefs = await SharedPreferences.getInstance();
-      } else {
-        throw Exception('Could not initialize SharedPreferences');
-      }
+      throw StateError('Sendy could not load its own preferences. No settings were deleted. Details: $e');
     }
 
     // Locale configuration upon persistence initialisation to prevent unlocalised Alias generation
@@ -183,6 +166,17 @@ class PersistenceService {
       }
     }
 
+    // Adopt the requested default once, without replacing a chosen custom/system/OLED theme.
+    if (prefs.getBool('sendy_isolation_002') != true) {
+      if (SendyIdentity.adoptYaru(prefs.getString(_colorKey))) {
+        await prefs.setString(_colorKey, SendyIdentity.defaultColorMode);
+      }
+      if (checkPlatform(const [TargetPlatform.windows, TargetPlatform.linux, TargetPlatform.macOS]) && prefs.getInt(_portKey) == defaultPort) {
+        await prefs.setInt(_portKey, SendyIdentity.httpPort);
+      }
+      await prefs.setBool('sendy_isolation_002', true);
+    }
+
     if (prefs.getString(_colorKey) == null) {
       await _initColorSetting(prefs, supportsDynamicColors);
     } else {
@@ -210,8 +204,13 @@ class PersistenceService {
   static Future<void> _initColorSetting(SharedPreferences prefs, bool supportsDynamicColors) async {
     await prefs.setString(
       _colorKey,
-      ColorMode.localsend.name,
+      SendyIdentity.defaultColorMode,
     );
+  }
+
+  String? getSettingsFilePath() {
+    final store = SharedPreferencesStorePlatform.instance;
+    return store is SharedPreferencesFile ? store.getPath() : null;
   }
 
   bool isPortableMode() {
@@ -300,9 +299,9 @@ class PersistenceService {
   ColorMode getColorMode() {
     final value = _prefs.getString(_colorKey);
     if (value == null) {
-      return ColorMode.system;
+      return ColorMode.yaru;
     }
-    return ColorMode.values.firstWhereOrNull((color) => color.name == value) ?? ColorMode.system;
+    return ColorMode.values.firstWhereOrNull((color) => color.name == value) ?? ColorMode.yaru;
   }
 
   Future<void> setColorMode(ColorMode color) async {
@@ -339,7 +338,7 @@ class PersistenceService {
   }
 
   int getPort() {
-    return _prefs.getInt(_portKey) ?? defaultPort;
+    return _prefs.getInt(_portKey) ?? SendyIdentity.httpPort;
   }
 
   Future<void> setPort(int port) async {

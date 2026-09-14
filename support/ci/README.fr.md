@@ -1,3 +1,5 @@
+> Mise à jour : consulter [les correctifs 0.1.1](SENDY-0.1.1-CORRECTIFS.fr.md), notamment avant de remplacer Sendy sur Windows.
+
 # Sendy — construire les installateurs sur GitHub
 
 ## Démarrer
@@ -8,11 +10,11 @@ Dans votre dépôt : **Actions → Sendy — Build installers → Run workflow**
 
 Le job `Validate Sendy UI` vérifie les identifiants, teste la structure du packaging Linux, analyse l'application Flutter et exécute les tests Sendy. Les installateurs ne sont produits qu'après sa réussite. Chaque build doit également réussir ; la présence du fichier de sommes de contrôle ne garantit pas que toutes les plateformes ont réussi.
 
-Les artefacts expirent après 14 jours. Ils ne sont pas publiés automatiquement sur un store ou dans GitHub Releases. Les noms commencent par `Sendy-0.1.0-…`.
+Les artefacts expirent après 14 jours. Ils ne sont pas publiés automatiquement sur un store ou dans GitHub Releases. Les noms commencent par `Sendy-0.1.1-…`.
 
 ## Ce qui est produit
 
-- Windows x64 : installateur Inno Setup par utilisateur dans `%LOCALAPPDATA%\Programs\Sendy`, désinstallation incluse ; archive portable distincte avec son propre `settings.json`.
+- Windows x64 : installateur Inno Setup par utilisateur dans `%LOCALAPPDATA%\Programs\Sendy`, désinstallation incluse ; archive portable distincte avec son propre `sendy-settings.json`.
 - macOS Intel et Apple Silicon : DMG avec raccourci Applications, PKG installé dans `/Applications`.
 - Linux x64 et ARM64 : DEB sous `/opt/sendy`, raccourci `sendy`, entrée de menu et icône ; TAR.GZ contenant le bundle Flutter complet.
 - Android : APK séparés ARMv7, ARM64 et x86_64.

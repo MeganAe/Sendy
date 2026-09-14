@@ -1,3 +1,13 @@
+# Mise à jour 0.1.1 — état actuel
+
+Le bilan 0.1.0 ci-dessous est conservé comme historique. **Son affirmation d’isolation des réglages Windows était incomplète et incorrecte** : le chemin `%APPDATA%\LocalSend` et la migration héritée restaient actifs. Le défaut a été confirmé puis corrigé en 0.1.1.
+
+Voir [le rapport 0.1.1](support/ci/SENDY-0.1.1-CORRECTIFS.fr.md) pour le stockage séparé, le nouveau fichier portable, le port HTTP 53318 / UDP 53317, Yaru par défaut, l’auteur Metoushela Walker, le diagnostic et les sauvegardes de réglages.
+
+**31 tests ciblés passent.** Compilation complète et coexistence réelle restent à tester. L’échec macOS n’est pas encore diagnostiqué ; seul son emplacement `Build macOS` est connu.
+
+---
+
 # Sendy 0.1.0 — état de finalisation
 
 ## Résultat

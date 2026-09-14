@@ -1,0 +1,36 @@
+00:00 +0: loading /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart
+00:00 +0: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Palette dark: readable text and primary buttons
+00:00 +1: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Palette light: readable text and primary buttons
+00:00 +2: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: The logo exposes one accessible brand label
+00:00 +3: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Picker header: width 320.0, text scale 1.0
+00:00 +4: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Picker header: width 320.0, text scale 2.0
+00:00 +5: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Picker header: width 390.0, text scale 1.0
+00:00 +6: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Picker header: width 390.0, text scale 2.0
+00:01 +7: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Picker header: width 1100.0, text scale 1.0
+00:01 +8: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Picker header: width 1100.0, text scale 2.0
+00:01 +9: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: A populated selection does not repeat the empty-state button
+00:01 +10: /home/user/localsend/app/test/widget/sendy/sendy_design_test.dart: Dark mode renders without layout exceptions
+00:01 +11: loading /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart
+00:01 +11: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Only a completely finished session is successful
+00:01 +12: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Waiting and transferring are distinct
+00:01 +13: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Display real progress, not a simulated percentage
+00:02 +14: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Unknown progress does not claim a percentage
+00:02 +15: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Failure at full byte count must not look successful
+00:02 +16: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Success animation finishes and does not repeat
+00:02 +17: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Reduced motion is honored immediately and after a change
+00:02 +18: /home/user/localsend/app/test/widget/sendy/sendy_transfer_test.dart: Transfer panel supports narrow screens and large text
+00:02 +19: loading /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart
+00:03 +19: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Windows settings belong exclusively to Sendy
+00:03 +20: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: An invalid APPDATA cannot silently select a relative directory
+00:03 +21: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Portable data cannot collide with the upstream settings.json
+00:03 +22: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: HTTP is separate, but discovery remains on the common multicast port
+00:03 +23: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Yaru becomes the default without replacing an explicitly custom theme
+00:03 +24: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Diagnostic report contains only the declared non-private fields
+00:03 +25: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Sendy file store Writes never change a neighbouring LocalSend directory
+00:03 +26: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Sendy file store A previous valid version is backed up; no temporary file remains
+00:03 +27: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Sendy file store Malformed preferences are preserved, not silently overwritten
+00:03 +28: /home/user/localsend/app/test/widget/sendy/sendy_isolation_test.dart: Sendy file store Removing and clearing settings updates memory and disk together
+00:03 +29: loading /home/user/localsend/app/test/unit/util/shared_preferences/shared_preferences_portable_test.dart
+00:04 +29: /home/user/localsend/app/test/unit/util/shared_preferences/shared_preferences_portable_test.dart: should put sendy-settings.json next to the executable
+00:04 +30: /home/user/localsend/app/test/unit/util/shared_preferences/shared_preferences_portable_test.dart: should fall back to the working directory when the executable is unknown
+00:04 +31: All tests passed!

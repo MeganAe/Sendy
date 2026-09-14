@@ -25,3 +25,6 @@
 
 # Sendy: temporary local verification toolchain
 /.cache/
+
+# Private Sendy portable preferences and backups
+sendy-settings.json*

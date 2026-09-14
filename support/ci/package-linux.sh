@@ -19,7 +19,7 @@ cat > "$root/DEBIAN/control" <<EOF
 Package: sendy
 Version: $version
 Architecture: $DEB_ARCH
-Maintainer: Sendy contributors <noreply@example.invalid>
+Maintainer: Metoushela Walker <noreply@example.invalid>
 Section: net
 Priority: optional
 Installed-Size: $(du -sk "$root/opt/sendy" | cut -f1)

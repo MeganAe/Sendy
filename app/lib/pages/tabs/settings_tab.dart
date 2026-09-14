@@ -3,11 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:localsend_app/config/sendy/sendy_identity.dart';
 import 'package:localsend_app/config/theme.dart';
 import 'package:localsend_app/gen/strings.g.dart';
 import 'package:localsend_app/model/persistence/color_mode.dart';
 import 'package:localsend_app/pages/about/about_page.dart';
 import 'package:localsend_app/pages/changelog_page.dart';
+import 'package:localsend_app/pages/sendy/diagnostics_page.dart';
 import 'package:localsend_app/pages/settings/network_interfaces_page.dart';
 import 'package:localsend_app/pages/tabs/settings_tab_controller.dart';
 import 'package:localsend_app/provider/network/server/server_provider.dart';
@@ -490,14 +492,14 @@ class SettingsTab extends StatelessWidget {
                     ),
                   ),
                 AnimatedCrossFade(
-                  crossFadeState: vm.settings.port != defaultPort ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                  crossFadeState: vm.settings.port != SendyIdentity.httpPort ? CrossFadeState.showSecond : CrossFadeState.showFirst,
                   duration: const Duration(milliseconds: 200),
                   alignment: Alignment.topLeft,
                   firstChild: Container(),
                   secondChild: Padding(
                     padding: const EdgeInsets.only(bottom: 15),
                     child: Text(
-                      t.settingsTab.network.portWarning(defaultPort: defaultPort),
+                      t.settingsTab.network.portWarning(defaultPort: SendyIdentity.httpPort),
                       style: const TextStyle(color: Colors.grey),
                     ),
                   ),
@@ -522,20 +524,17 @@ class SettingsTab extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 0),
               children: [
                 _ButtonEntry(
+                  label: 'Diagnostic Sendy',
+                  buttonLabel: t.general.open,
+                  onTap: () async {
+                    await context.push(() => const SendyDiagnosticsPage());
+                  },
+                ),
+                _ButtonEntry(
                   label: t.aboutPage.title,
                   buttonLabel: t.general.open,
                   onTap: () async {
                     await context.push(() => const AboutPage());
-                  },
-                ),
-                _ButtonEntry(
-                  label: '${t.settingsTab.other.privacyPolicy} (LocalSend)',
-                  buttonLabel: t.general.open,
-                  onTap: () async {
-                    await launchUrl(
-                      Uri.parse('https://localsend.org/privacy'),
-                      mode: LaunchMode.externalApplication,
-                    );
                   },
                 ),
                 if (checkPlatform([TargetPlatform.iOS, TargetPlatform.macOS]))

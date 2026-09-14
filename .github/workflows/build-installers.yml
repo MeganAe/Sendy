@@ -106,7 +106,7 @@ jobs:
         if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
     - name: Portable ZIP
       run: |-
-        Set-Content -Path "${{ runner.temp }}\inno\settings.json" -Value "{}"
+        Set-Content -Path "${{ runner.temp }}\inno\sendy-settings.json" -Value "{}"
         Compress-Archive -Path "${{ runner.temp }}\inno\*" -DestinationPath "${{ runner.temp }}\inno-result\Sendy-$env:APP_VERSION-windows-x64-portable.zip"
     - name: Upload installer
       uses: actions/upload-artifact@v6
@@ -219,8 +219,18 @@ jobs:
       working-directory: app
       run: flutter pub get
     - name: Build macOS
-      run: flutter build macos --release
+      run: |
+        set -euo pipefail
+        flutter build macos --release 2>&1 | tee "$RUNNER_TEMP/sendy-macos-build.log"
       working-directory: app
+    - name: Upload macOS build log
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v6
+      with:
+        name: sendy-macos-build-log-${{ matrix.arch }}
+        path: ${{ runner.temp }}/sendy-macos-build.log
+        if-no-files-found: ignore
+        retention-days: 14
     - name: Package DMG and PKG
       run: bash support/ci/package-macos.sh
       env:

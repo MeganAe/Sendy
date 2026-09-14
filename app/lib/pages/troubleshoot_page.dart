@@ -1,7 +1,9 @@
+// Modified for Sendy: own firewall rules; discovery uses a separate UDP port.
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:localsend_app/config/sendy/sendy_identity.dart';
 import 'package:localsend_app/gen/strings.g.dart';
 import 'package:localsend_app/provider/settings_provider.dart';
 import 'package:localsend_app/util/native/cmd_helper.dart';
@@ -29,15 +31,17 @@ class TroubleshootPage extends StatelessWidget {
           const SizedBox(height: 5),
           _TroubleshootItem(
             symptomText: t.troubleshootPage.firewall.symptom,
-            solutionText: t.troubleshootPage.firewall.solution(port: settings.port),
+            solutionText: Localizations.localeOf(context).languageCode == 'fr'
+                ? 'Autorise Sendy dans le pare-feu : TCP ${settings.port} pour les transferts et UDP ${SendyIdentity.discoveryPort} pour la découverte.'
+                : 'Allow Sendy through the firewall: TCP ${settings.port} for transfers and UDP ${SendyIdentity.discoveryPort} for discovery.',
             primaryButton: _FixButton(
               label: t.troubleshootPage.fixButton,
               onTapMap: {
                 TargetPlatform.windows: _CommandFixAction(
                   adminPrivileges: true,
                   commands: [
-                    'netsh advfirewall firewall add rule name="LocalSend" dir=in action=allow protocol=TCP localport=${settings.port}',
-                    'netsh advfirewall firewall add rule name="LocalSend" dir=in action=allow protocol=UDP localport=${settings.port}',
+                    'netsh advfirewall firewall add rule name="Sendy HTTP" dir=in action=allow protocol=TCP localport=${settings.port}',
+                    'netsh advfirewall firewall add rule name="Sendy Discovery" dir=in action=allow protocol=UDP localport=${SendyIdentity.discoveryPort}',
                   ],
                 ),
               },

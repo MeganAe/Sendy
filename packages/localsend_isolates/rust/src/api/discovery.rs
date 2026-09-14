@@ -1,3 +1,4 @@
+// Modified for Sendy: discovery transport port is independent of the advertised HTTP service.
 use crate::frb_generated::StreamSink;
 use flutter_rust_bridge::frb;
 pub use localsend::discovery::DeviceLogKind;
@@ -150,8 +151,8 @@ static RUNNING_DISCOVERY: Mutex<Option<Arc<DiscoveryInstance>>> = Mutex::const_n
 /// Announcements are received from the IPv4 [group] and, as a LocalSend
 /// extension, from the (currently hardcoded) IPv6 group `ff12::fd3a:e420`.
 ///
-/// [port] is used both to bind the multicast sockets and as the HTTP server
-/// port announced to other devices. [cert_pem] and [private_key_pem] are this
+/// [port] is the HTTP server port announced to other devices. Multicast uses
+/// the standard shared discovery port, independently. [cert_pem] and [private_key_pem] are this
 /// device's TLS identity, sent as client certificate with every register
 /// request; [fingerprint] must be the certificate's SHA-256 fingerprint.
 ///
@@ -197,7 +198,7 @@ pub async fn start_discovery(
             group,
             // Hardcoded for now; becomes a parameter once the app exposes it.
             group_v6: Some(DEFAULT_MULTICAST_GROUP_V6),
-            port,
+            port: localsend::multicast::DEFAULT_PORT,
             interface_filter: InterfaceFilter {
                 whitelist: network_whitelist,
                 blacklist: network_blacklist,

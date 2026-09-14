@@ -6,15 +6,17 @@
   #define ResultDir "."
 #endif
 #ifndef MyAppVersion
-  #define MyAppVersion "0.1.0"
+  #define MyAppVersion "0.1.1"
 #endif
 [Setup]
 AppId={{7C94B8D3-9ED5-44C0-AE62-6470E0943496}
 AppName=Sendy
 AppVersion={#MyAppVersion}
-AppPublisher=Sendy contributors
+AppPublisher=Metoushela Walker
 DefaultDirName={localappdata}\Programs\Sendy
 DefaultGroupName=Sendy
+UsePreviousAppDir=no
+DisableDirPage=yes
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
@@ -40,3 +42,11 @@ Name: "{autoprograms}\Sendy"; Filename: "{app}\sendy.exe"
 Name: "{autodesktop}\Sendy"; Filename: "{app}\sendy.exe"; Tasks: desktopicon
 [Run]
 Filename: "{app}\sendy.exe"; Description: "{cm:LaunchProgram,Sendy}"; Flags: nowait postinstall skipifsilent
+
+[Code]
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+begin
+  Result := '';
+  if FileExists(ExpandConstant('{app}\localsend_app.exe')) then
+    Result := 'Sendy must not be installed in an existing LocalSend directory. Choose a separate Sendy installation.';
+end;

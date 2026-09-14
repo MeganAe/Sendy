@@ -41,6 +41,13 @@ for relative in ['app/windows/runner/resources/app_icon.ico','app/assets/packagi
     check((ROOT/relative).read_bytes()[:4]==b'\0\0\1\0',f'Invalid ICO: {relative}')
 check('Apache License' in text('LICENSE'),'Original license missing')
 check('independent derivative' in text('NOTICE'),'Attribution notice missing')
+check("'Sendy', 'settings.json'" in text('app/lib/config/sendy/sendy_identity.dart'), 'Settings must belong to Sendy')
+check('_windowsLegacyFile' not in text('app/lib/provider/persistence_provider.dart'), 'Do not read upstream legacy settings')
+check('deleteSync' not in text('app/lib/provider/persistence_provider_migrations.dart'), 'Migrations must not delete legacy directories')
+check("'sendy-settings.json'" in text('app/lib/util/shared_preferences/shared_preferences_portable.dart'), 'Portable settings must be isolated')
+check('port: localsend::multicast::DEFAULT_PORT,' in text('packages/localsend_isolates/rust/src/api/discovery.rs'), 'Discovery and HTTP must not share a configurable port')
+check('AppPublisher=Metoushela Walker' in text('support/ci/sendy.iss'), 'Publisher must be Metoushela Walker')
+check("defaultColorMode = 'yaru'" in text('app/lib/config/sendy/sendy_identity.dart'), 'Yaru must be the default')
 if errors:
     raise SystemExit('\n'.join(errors))
 print(f'Sendy {version}: application IDs, active installers, localizations, XML, icons and license checks passed.')

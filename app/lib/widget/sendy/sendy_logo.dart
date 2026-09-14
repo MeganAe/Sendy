@@ -1,5 +1,6 @@
 // Sendy fork: resolution-independent reconstruction of the approved two-file mark.
 import 'package:flutter/material.dart';
+import 'package:localsend_app/config/sendy/sendy_brand.dart';
 
 class SendyLogo extends StatelessWidget {
   final double size;
@@ -9,7 +10,7 @@ class SendyLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tint = color ?? Theme.of(context).colorScheme.primary;
+    final tint = color ?? (Theme.of(context).brightness == Brightness.dark ? const Color(0xFFB0CDF7) : SendyBrand.midnight);
     return Semantics(
       label: 'Sendy',
       image: true,

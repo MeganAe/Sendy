@@ -5,5 +5,10 @@
   "inno_app_id": "7C94B8D3-9ED5-44C0-AE62-6470E0943496",
   "midnight": "#19345C",
   "ivory": "#F4F1E9",
-  "note": "Independent internal identifiers. Name, domain and store availability have not been legally verified."
+  "note": "Independent internal identifiers. Name, domain and store availability have not been legally verified.",
+  "developer": "Metoushela Walker",
+  "http_port": 53318,
+  "discovery_port": 53317,
+  "windows_settings_directory": "Sendy",
+  "default_theme": "yaru"
 }

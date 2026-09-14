@@ -2,6 +2,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:localsend_app/config/sendy/sendy_identity.dart';
 import 'package:localsend_app/gen/strings.g.dart';
 import 'package:localsend_app/pages/debug/debug_page.dart';
 import 'package:localsend_app/util/i18n.dart';
@@ -20,6 +21,48 @@ final _translatorWithGithubRegex = RegExp(r'(.+) \(@([\w\-_]+)\)');
 
 class AboutPage extends StatelessWidget {
   const AboutPage();
+  @override
+  Widget build(BuildContext context) {
+    final french = Localizations.localeOf(context).languageCode == 'fr';
+    return Scaffold(
+      appBar: AppBar(title: Text(t.aboutPage.title)),
+      body: ResponsiveListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          const SizedBox(height: 24),
+          const LocalSendLogo(withText: true),
+          const SizedBox(height: 24),
+          Text(
+            french ? 'Développé par ${SendyIdentity.developer}' : 'Developed by ${SendyIdentity.developer}',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 12),
+          const Text('Sendy ${SendyIdentity.version}', textAlign: TextAlign.center),
+          const SizedBox(height: 28),
+          FilledButton.icon(
+            onPressed: () async {
+              await launchUrl(Uri.parse(SendyIdentity.repository), mode: LaunchMode.externalApplication);
+            },
+            icon: const Icon(Icons.code),
+            label: Text(french ? 'Projet Sendy' : 'Sendy project'),
+          ),
+          const SizedBox(height: 16),
+          OutlinedButton.icon(
+            onPressed: () async {
+              await context.push(() => const _UpstreamCreditsPage());
+            },
+            icon: const Icon(Icons.info_outline),
+            label: Text(french ? 'Licences et crédits des composants' : 'Component licenses and credits'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _UpstreamCreditsPage extends StatelessWidget {
+  const _UpstreamCreditsPage();
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +82,12 @@ class AboutPage extends StatelessWidget {
                 ? 'Sendy est une version indépendante basée sur LocalSend. Les crédits et liens ci-dessous concernent le projet d’origine. Sendy n’est pas une version officielle de LocalSend.'
                 : 'Sendy is an independent app based on LocalSend. The credits and links below refer to the original project. This is not an official LocalSend release.',
             textAlign: TextAlign.center,
+          ),
+          TextButton(
+            onPressed: () async {
+              await launchUrl(Uri.parse('https://localsend.org/privacy'));
+            },
+            child: const Text('LocalSend — upstream privacy documentation'),
           ),
           const SizedBox(height: 16),
           Text(

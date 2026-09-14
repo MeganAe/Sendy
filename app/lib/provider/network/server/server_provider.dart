@@ -1,6 +1,8 @@
+// Modified for Sendy: invalid HTTP port falls back to the Sendy service port.
 import 'dart:async';
 import 'dart:io';
 
+import 'package:localsend_app/config/sendy/sendy_identity.dart';
 import 'package:localsend_app/gen/strings.g.dart';
 import 'package:localsend_app/model/cross_file.dart';
 import 'package:localsend_app/model/state/server/server_state.dart';
@@ -11,7 +13,6 @@ import 'package:localsend_app/provider/network/server/server_utils.dart';
 import 'package:localsend_app/provider/settings_provider.dart';
 import 'package:localsend_app/util/alias_generator.dart';
 import 'package:localsend_app/util/native/web_pages_loader.dart';
-import 'package:localsend_isolates/constants.dart';
 import 'package:localsend_isolates/isolate.dart';
 import 'package:localsend_isolates/model/dto/multicast_dto.dart';
 import 'package:localsend_isolates/rust/api/server.dart' show WebI18n, WebMode, WebParams;
@@ -128,8 +129,8 @@ class ServerService extends Notifier<ServerState?> {
       alias = generateRandomAlias();
     }
 
-    if (port < 0 || port > 65535) {
-      port = defaultPort;
+    if (port < 1 || port > 65535) {
+      port = SendyIdentity.httpPort;
     }
 
     _logger.info('Starting server...');

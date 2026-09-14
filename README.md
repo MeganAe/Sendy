@@ -1,12 +1,17 @@
 # Sendy
 
-**Partage de fichiers entre appareils — identité bleu nuit et ivoire.**
+**Partage de fichiers entre appareils — développé par Metoushela Walker.**
 
-Version de travail : **0.1.0+1**. Application Flutter indépendante basée sur [LocalSend](https://github.com/localsend/localsend), sous licence Apache-2.0. Sendy n'est pas une version officielle du projet d'origine.
+Thème par défaut : **Yaru**. Identité visuelle Sendy conservée.
+
+> **Correctif important 0.1.1 :** données Windows et portable isolées de LocalSend, port HTTP dédié et diagnostic local. Lire [le guide de mise à jour et de récupération](support/ci/SENDY-0.1.1-CORRECTIFS.fr.md) avant de remplacer une installation 0.1.0.
+
+
+Version de travail : **0.1.1+2**. Application Flutter indépendante basée sur [LocalSend](https://github.com/localsend/localsend), sous licence Apache-2.0. Sendy n'est pas une version officielle du projet d'origine.
 
 ## Statut honnête
 
-Le code du design, les icônes et les installateurs sont préparés. **Les builds natifs n'ont pas encore été compilés ni testés sur appareils.** Les composants ciblés passent 19 tests Flutter. La compilation du graphe complet doit être validée par le workflow GitHub, l'environnement local étant limité en mémoire.
+Le code du design, les icônes et les installateurs sont préparés. **Cette révision 0.1.1 reste à compiler sur GitHub et à tester sur appareils. Les builds 0.1.0 Windows/Linux/Android ont réussi sur GitHub ; les builds Mac ont échoué et nécessitent leur journal détaillé.** Les composants ciblés passent 31 tests ciblés. La compilation du graphe complet doit être validée par le workflow GitHub, l'environnement local étant limité en mémoire.
 
 Ce dépôt n'est donc pas encore une version de production certifiée.
 
