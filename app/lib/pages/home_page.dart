@@ -8,6 +8,7 @@ import 'package:localsend_app/config/sendy/sendy_brand.dart';
 import 'package:localsend_app/gen/strings.g.dart';
 import 'package:localsend_app/pages/home_page_controller.dart';
 import 'package:localsend_app/pages/receive_history_page.dart';
+import 'package:localsend_app/pages/sendy/parcels_page.dart';
 import 'package:localsend_app/pages/tabs/receive_tab.dart';
 import 'package:localsend_app/pages/tabs/send_tab.dart';
 import 'package:localsend_app/pages/tabs/settings_tab.dart';
@@ -16,7 +17,9 @@ import 'package:localsend_app/provider/selection/selected_sending_files_provider
 import 'package:localsend_app/util/native/cross_file_converters.dart';
 import 'package:localsend_app/widget/responsive_builder.dart';
 import 'package:localsend_app/widget/sendy/sendy_logo.dart';
+import 'package:localsend_app/widget/sendy/sendy_navigation_menu.dart';
 import 'package:refena_flutter/refena_flutter.dart';
+import 'package:routerino/routerino.dart';
 
 enum HomeTab {
   send(Icons.north_east_rounded),
@@ -80,6 +83,10 @@ class _HomePageState extends State<HomePage> with Refena {
     final animations = context.watch(animationProvider) && !MediaQuery.disableAnimationsOf(context);
     void changeTab(HomeTab tab) => ref.redux(homePageControllerProvider).dispatch(ChangeTabAction(tab, animate: animations));
     const mainTabs = [HomeTab.send, HomeTab.receive, HomeTab.history];
+    final parcelsLabel = Localizations.localeOf(context).languageCode == 'fr' ? 'Mes colis' : 'My parcels';
+    Future<void> openParcels() async {
+      await context.push(() => const SendyParcelsPage());
+    }
 
     return DropTarget(
       onDragEntered: (_) {
@@ -123,10 +130,11 @@ class _HomePageState extends State<HomePage> with Refena {
                 ? AppBar(
                     title: const SendyLogo(size: 27),
                     actions: [
-                      IconButton(
-                        tooltip: t.settingsTab.title,
-                        icon: const Icon(Icons.settings_outlined),
-                        onPressed: () => changeTab(HomeTab.settings),
+                      SendyMobileMenu(
+                        parcelsLabel: parcelsLabel,
+                        settingsLabel: t.settingsTab.title,
+                        onOpenParcels: openParcels,
+                        onOpenSettings: () => changeTab(HomeTab.settings),
                       ),
                       const SizedBox(width: 8),
                     ],
@@ -144,6 +152,11 @@ class _HomePageState extends State<HomePage> with Refena {
                     leading: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 28),
                       child: SendyLogo(size: 30, withText: sizingInformation.isDesktop),
+                    ),
+                    trailing: SendyParcelsRailEntry(
+                      extended: sizingInformation.isDesktop,
+                      label: parcelsLabel,
+                      onOpen: openParcels,
                     ),
                     destinations: HomeTab.values.map((tab) {
                       return NavigationRailDestination(

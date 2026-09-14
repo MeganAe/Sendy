@@ -6,7 +6,6 @@ import 'package:localsend_app/gen/strings.g.dart';
 import 'package:localsend_app/model/send_mode.dart';
 import 'package:localsend_app/pages/device_details_page.dart';
 import 'package:localsend_app/pages/selected_files_page.dart';
-import 'package:localsend_app/pages/sendy/parcels_page.dart';
 import 'package:localsend_app/pages/tabs/send_tab_vm.dart';
 import 'package:localsend_app/pages/troubleshoot_page.dart';
 import 'package:localsend_app/provider/animation_provider.dart';
@@ -55,16 +54,6 @@ class SendTab extends StatelessWidget {
         final buttonWidth = sizingInformation.isDesktop ? BigButton.desktopWidth : BigButton.mobileWidth;
         final ref = context.ref;
         final sections = <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-            child: OutlinedButton.icon(
-              onPressed: () async {
-                await context.push(() => const SendyParcelsPage());
-              },
-              icon: const Icon(Icons.inventory_2_outlined),
-              label: const Text('Mes colis'),
-            ),
-          ),
           SendySendHeader(
             empty: vm.selectedFiles.isEmpty,
             desktop: sizingInformation.isDesktop,
